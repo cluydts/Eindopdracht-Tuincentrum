@@ -371,7 +371,7 @@ namespace Persistentie_SQL
                         {
                             if (offerte.id == (int)reader["offerteid"])
                             {
-                                offerte.Dproductaantal.Add(new Product((int)reader["productid"], (string)reader["productNaam"], (string)reader["wetenschappelijkeNaam"], (double)reader["prijs"], (string)reader["beschrijving"]), (int)reader["aantal"]);
+                                offerte.VoegProductToe(new Product((int)reader["productid"], (string)reader["productNaam"], (string)reader["wetenschappelijkeNaam"], (double)reader["prijs"], (string)reader["beschrijving"]), (int)reader["aantal"]);
                             }
                             else
                             {
@@ -499,7 +499,7 @@ namespace Persistentie_SQL
                         {
                             if (offerte.id == (int)reader["offerteid"])
                             {
-                                offerte.Dproductaantal.Add(new Product((int)reader["productid"], (string)reader["productNaam"], (string)reader["wetenschappelijkeNaam"], (double)reader["prijs"], (string)reader["beschrijving"]), (int)reader["aantal"]);
+                                offerte.VoegProductToe(new Product((int)reader["productid"], (string)reader["productNaam"], (string)reader["wetenschappelijkeNaam"], (double)reader["prijs"], (string)reader["beschrijving"]), (int)reader["aantal"]);
                             }
 
                         }

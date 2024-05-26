@@ -151,7 +151,7 @@ namespace TuincentrumUI
                 int bedrag = prijs * aantal;
                 totaal += bedrag;
                 Product product = new Product(int.Parse(parts[2].Trim()), "naam", "wetenschappelijke naam", prijs, "Beschrijving");
-                offerte.Dproductaantal.Add(product, aantal);
+                offerte.VoegProductToe(product, aantal);
             }
 
             offerte.Producten = aantalproducten;

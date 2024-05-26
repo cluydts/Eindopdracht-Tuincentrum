@@ -16,8 +16,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="0.25*"/>
-            <ColumnDefinition Width="*"/>
+          
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Content="KlantNummer" Margin=" 5"/>
         <TextBox Grid.Row="0" Grid.Column="1" Name="KlantnummerTextBox" Margin="5" IsEnabled ="true" TextChanged="KlantnummerTextBox_TextChanged"/>
@@ -25,8 +24,8 @@
         <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Naam" Margin=" 5"/>
         <TextBox Grid.Row="0" Grid.Column="3" Name="NaamTextBox" Margin="5" IsEnabled ="true" TextChanged="NaamTextBox_TextChanged"/>
 
-        <Button Grid.Row="0" Grid.Column="7" Content="zoek" Margin="5" Click="ZoekButton_Click"/>
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Name="StatistiekenKlantenDataGrid" Margin="5" IsReadOnly="true" ColumnWidth="*"/>
+      
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Name="StatistiekenKlantenDataGrid" Margin="5" IsReadOnly="true" ColumnWidth="*"/>
 
         
         

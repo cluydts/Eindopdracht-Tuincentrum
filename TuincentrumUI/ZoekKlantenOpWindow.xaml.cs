@@ -43,13 +43,6 @@ namespace TuincentrumUI
             dc = new Domeincontroller(processor, tuinRepo);
         }
 
-        private void ZoekButton_Click(object sender, RoutedEventArgs e)
-        {
-            string klantNr = KlantnummerTextBox.Text;
-            string naam = NaamTextBox.Text;
-
-            StatistiekenKlantenDataGrid.ItemsSource = dc.GeefZoekKlantenOpStatistieken(klantNr, naam);
-        }
 
         private void KlantnummerTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {

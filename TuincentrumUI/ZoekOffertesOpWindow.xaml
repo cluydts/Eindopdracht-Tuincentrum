@@ -18,21 +18,20 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="0.25*"/>
-            <ColumnDefinition Width="*"/>
+           
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Content="OfferteNr" Margin=" 5"/>
         <TextBox Grid.Row="0" Grid.Column="1" Name="OfferteTextBox" Margin="5" IsEnabled ="true" TextChanged="OfferteTextBox_TextChanged"/>
 
         <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Datum" Margin=" 5"/>
-        <DatePicker Grid.Row="0" Grid.Column="3" Name="DatumDatePicker" Margin="5" DataContextChanged="DatumDatePicker_DateChanged"/>
+        <DatePicker Grid.Row="0" Grid.Column="3" Name="DatumDatePicker" Margin="5" SelectedDateChanged="DatumDatePicker_SelectedDateChanged"/>
 
         <Label Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Content="KlantNr" Margin=" 5"/>
         <TextBox Grid.Row="0" Grid.Column="5" Name="KlantNrTextBox" Margin="5" IsEnabled ="true" TextChanged="KlantNrTextBox_TextChanged"/>
 
 
-        <Button Grid.Row="0" Grid.Column="7" Content="zoek" Margin="5" Click="ZoekButton_Click"/>
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" Name="StatistiekenOffertesDataGrid" Margin="5" IsReadOnly="true" ColumnWidth="*"/>
+      
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Name="StatistiekenOffertesDataGrid" Margin="5" IsReadOnly="true" ColumnWidth="*"/>
 
     </Grid>
 

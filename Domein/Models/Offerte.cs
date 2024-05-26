@@ -10,13 +10,14 @@ namespace Domein.Models
     public class Offerte
     {
         private int _id;
+        private int _klantNummer;
         private int _producten;
         private Dictionary<Product, int> _Dproductaantal;
 
 
-        public int? id { get { return _id; } set { if (value is null) throw new DomeinException("prijs"); _id = (int)value; } }
+        public int? id { get { return _id; } set { if (value is null) throw new DomeinException("id"); _id = (int)value; } }
         public DateTime Datum { get; set; }
-        public int KlantNummer { get; set; }
+        public int KlantNummer { get { return _klantNummer; } set { if (value <= 0) throw new DomeinException("klantnummer"); _klantNummer = (int)value; } }
         public bool Afhaal { get; set; }
         public bool Aanleg { get; set; }
         public int Producten { get { return _producten; } set { if (value < 0) { throw new DomeinException("Producten"); } _producten = value; } }
@@ -101,6 +102,34 @@ namespace Domein.Models
                 return totalePrijs * 0.10;
             }
             return totalePrijs * 0.15;
+        }
+
+        private bool IsTeveelProduct()
+        {
+            int aantal = 0;
+            foreach (var item in Dproductaantal)
+            {
+                aantal++;
+
+            }
+            if (aantal > Producten)
+            {
+                return true;
+            }
+            return false;   
+        }
+
+        public void VoegProductToe(Product product, int aantal)
+        {
+            if (IsTeveelProduct())
+            {
+                throw new DomeinException("voegProductToe");
+            }
+            else
+            {
+                Dproductaantal.Add(product, aantal);
+            }
+
         }
     }
 }

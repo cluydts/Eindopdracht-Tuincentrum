@@ -43,10 +43,11 @@ namespace TuincentrumUI
 
         }
 
-        private void ZoekButton_Click(object sender, RoutedEventArgs e)
+    
+
+        private void DatumDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             VoerMethodeUit();
-
         }
 
         private void VoerMethodeUit()
@@ -58,13 +59,6 @@ namespace TuincentrumUI
             StatistiekenOffertesDataGrid.ItemsSource = dc.GeeftZoekOfferteOpStatistieken(klantNr, datum, offerteid);
 
         }
-
-        private void DatumDatePicker_DateChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-            VoerMethodeUit();
-        }
-
         private void OfferteTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -95,7 +89,7 @@ namespace TuincentrumUI
             int caretPosition = KlantNrTextBox.SelectionStart;
             bool isNumeriek = int.TryParse(klantNr, out int getal);
 
-           
+
             if (!isNumeriek)
             {
                 string numeriekeTekst = new string(klantNr.Where(char.IsDigit).ToArray());
@@ -112,5 +106,7 @@ namespace TuincentrumUI
             }
 
         }
+
+        
     }
 }
