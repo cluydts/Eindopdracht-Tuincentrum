@@ -49,11 +49,12 @@ namespace Domein.Models
                 // Voeg eventuele korting toe
                 totalePrijs -= BerekenKorting(totalePrijs);
                 // Voeg eventuele leveringskosten toe
-                if (Afhaal)
+                if (!Afhaal)
                 {
                     totalePrijs += BerekenLeveringskosten(totalePrijs);
                 }
-                else if (Aanleg) { }
+
+                if (Aanleg is true)
                 {
                     totalePrijs += BerekenAanlegkosten(totalePrijs);
                 }

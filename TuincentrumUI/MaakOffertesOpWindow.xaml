@@ -33,11 +33,10 @@
         <ComboBox Grid.Column="1" Grid.Row="2" Margin="0,20,46,23" Name="KlantNummerComboBox" IsEnabled="True"  IsEditable="True" IsReadOnly="False" StaysOpenOnEdit="True"/>
 
         <Label Grid.Column="0" Grid.Row="2" Content="Afhaal" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,69,0,69" Grid.RowSpan="3"/>
-
-        <CheckBox Grid.Column="1" Grid.Row="3" x:Name="AfhaalCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="False" Checked="AfhaalCheckBox_Checked"/>
+        <CheckBox Grid.Column="1" Grid.Row="3" x:Name="AfhaalCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="False" Checked="AfhaalCheckBox_Checked" Unchecked="AfhaalCheckBox_UnChecked"/>
 
         <Label Grid.Column="0" Grid.Row="4" Content="Aanleg" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,69" Grid.RowSpan="2"/>
-        <CheckBox Grid.Column="1" Grid.Row="4" x:Name="AanlegCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="False" Checked="AanlegCheckBox_Checked"/>
+        <CheckBox Grid.Column="1" Grid.Row="4" x:Name="AanlegCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="False" Checked="AanlegCheckBox_Checked" Unchecked="AanlegCheckBox_UnChecked"/>
 
         <Label Grid.Column="0" Grid.Row="5" Content="Prijs:" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBlock Grid.Column="1" Grid.Row="5" Name="PrijsTextBlock" Margin="5,26,218,24" Text="€ 0"/>

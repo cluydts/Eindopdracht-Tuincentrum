@@ -132,32 +132,33 @@ namespace TuincentrumUI
         public void UpdatePrijs()
         {
             string[] parts;
-            int totaal = 0;
+            double totaal = 0;
 
             int aantalproducten = 0;
-            Offerte offerte = new Offerte(99999, DateTime.Now, 1, AfhaalCheckBox.IsChecked.Value, AanlegCheckBox.IsChecked.Value, aantalproducten);
-
-            foreach (string item in GeselecteerdeProductenListBox.Items)
+            if (GeselecteerdeProductenListBox.Items.Count == 0)
             {
-                if (GeselecteerdeProductenListBox.Items.Count == 0)
-                {
-                    PrijsTextBlock.Text = $"€ {totaal}";
-                }
-
-                parts = item.Split(',', '|');
-                int prijs = int.Parse(parts[3].Replace('€', ' ').Trim());
-                int aantal = int.Parse(parts[4].Trim());
-                aantalproducten += aantal;
-                int bedrag = prijs * aantal;
-                totaal += bedrag;
-                Product product = new Product(int.Parse(parts[2].Trim()), "naam", "wetenschappelijke naam", prijs, "Beschrijving");
-                offerte.VoegProductToe(product, aantal);
+                PrijsTextBlock.Text = $"€ {totaal}";
             }
+            else
+            {
+                Offerte offerte = new Offerte(99999, DateTime.Now, 1, AfhaalCheckBox.IsChecked.Value, AanlegCheckBox.IsChecked.Value, aantalproducten);
 
-            offerte.Producten = aantalproducten;
-            PrijsTextBlock.Text = $"€ {offerte.BerekenTotalePrijs()}";
+                foreach (string item in GeselecteerdeProductenListBox.Items)
+                {
+                    parts = item.Split('€', '|');
+                    double prijs = double.Parse(parts[1].Trim());
+                    int aantal = int.Parse(parts[2].Trim());
+                    offerte.Producten += 1;
+                    double bedrag = prijs * aantal;
+                    totaal += bedrag;
+                    parts = parts[0].Split(',');
+                    Product product = new Product(int.Parse(parts[parts.Length - 2].Trim()), "naam", "wetenschappelijke naam", prijs, "Beschrijving");
+                    offerte.VoegProductToe(product, aantal);
 
-
+                }
+                offerte.Producten = aantalproducten;
+                PrijsTextBlock.Text = $"€ {Math.Round(offerte.BerekenTotalePrijs(), 2)}";
+            }
         }
 
         private bool ProductBestaatAl()
@@ -268,12 +269,14 @@ namespace TuincentrumUI
 
                     foreach (string item in GeselecteerdeProducten)
                     {
-                        parts = item.Split(new char[] { ',', '|' });
-                        int productId = int.Parse(parts[2].Trim());
+                        parts = item.Split(new char[] { '€', '|' });
+
                         int offerteNr = int.Parse(OfferteNr);
-                        
                         aantalProducten = 0;
-                        aantalProducten = int.Parse(parts[4].Trim());
+                        aantalProducten = int.Parse(parts[2].Trim());
+                        parts = parts[0].Split(',');
+                        int productId = int.Parse(parts[parts.Length - 2].Trim());
+
                         Offerte_Product O_P = new Offerte_Product(offerteNr, productId, aantalProducten);
                         dc.UploadAangemaakteOfferte_Product(O_P);
                     }
@@ -282,24 +285,36 @@ namespace TuincentrumUI
                 this.Close();
             }
         }
-
+        private void AfhaalCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (AfhaalCheckBox.IsChecked is true)
+            {
+                AanlegCheckBox.IsChecked = false;
+            }
+            UpdatePrijs();
+        }
         private void AanlegCheckBox_Checked(object sender, RoutedEventArgs e)
         {
 
             if (AfhaalCheckBox.IsChecked is true)
             {
-                
+
                 AanlegCheckBox.IsChecked = false;
+
             }
-            
+            UpdatePrijs();
+
         }
 
-        private void AfhaalCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void AfhaalCheckBox_UnChecked(object sender, RoutedEventArgs e)
         {
-            if(AfhaalCheckBox.IsChecked is true)
-            {
-                AanlegCheckBox.IsChecked = false;
-            }
+            UpdatePrijs();
+
+        }
+
+        private void AanlegCheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            UpdatePrijs();
         }
     }
 }
