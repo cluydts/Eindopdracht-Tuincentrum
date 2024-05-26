@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domein\Domein.csproj" />
+    <ProjectReference Include="..\Persistentie_File\Persistentie_File.csproj" />
+    <ProjectReference Include="..\Persistentie_SQL\Persistentie_SQL.csproj" />
+  </ItemGroup>
+
+</Project>
