@@ -10,26 +10,27 @@ namespace Domein.Models
     public class Offerte
     {
         private int _id;
-        private int _klantNummer;
+
         private int _producten;
         private Dictionary<Product, int> _Dproductaantal;
 
 
         public int? id { get { return _id; } set { if (value is null) throw new DomeinException("id"); _id = (int)value; } }
         public DateTime Datum { get; set; }
-        public int KlantNummer { get { return _klantNummer; } set { if (value <= 0) throw new DomeinException("klantnummer"); _klantNummer = (int)value; } }
+        public Klant Klant { get; set; }
         public bool Afhaal { get; set; }
         public bool Aanleg { get; set; }
         public int Producten { get { return _producten; } set { if (value < 0) { throw new DomeinException("Producten"); } _producten = value; } }
+
         public Dictionary<Product, int> Dproductaantal = new Dictionary<Product, int>();
 
         public double prijs { get; set; }
 
-        public Offerte(int id, DateTime datum, int klantNummer, bool afhaal, bool aanleg, int producten)
+        public Offerte(int id, DateTime datum, Klant klant, bool afhaal, bool aanleg, int producten)
         {
             this.id = id;
             Datum = datum;
-            KlantNummer = klantNummer;
+            Klant = klant;
             Afhaal = afhaal;
             Aanleg = aanleg;
             Producten = producten;
@@ -58,7 +59,7 @@ namespace Domein.Models
                 {
                     totalePrijs += BerekenAanlegkosten(totalePrijs);
                 }
-               
+
             }
             return totalePrijs;
         }
@@ -105,32 +106,18 @@ namespace Domein.Models
             return totalePrijs * 0.15;
         }
 
-        private bool IsTeveelProduct()
-        {
-            int aantal = 0;
-            foreach (var item in Dproductaantal)
-            {
-                aantal++;
 
-            }
-            if (aantal > Producten)
-            {
-                return true;
-            }
-            return false;   
-        }
 
         public void VoegProductToe(Product product, int aantal)
         {
-            if (IsTeveelProduct())
-            {
-                throw new DomeinException("voegProductToe");
-            }
-            else
-            {
-                Dproductaantal.Add(product, aantal);
-            }
+            Dproductaantal.Add(product, aantal);
+            Producten = Dproductaantal.Count;
+        }
 
+        public void VerwijderProduct(Product product)
+        {
+            Dproductaantal.Remove(product);
+            Producten = Dproductaantal.Count;
         }
     }
 }

@@ -7,70 +7,60 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domein.Managers
 {
     public class Domeincontroller
     {
         private IFileProcessor fileProcessor;
-        private ITuinCentrumRepository tuinCentrumRepository;
+        private ITuinCentrumRepository tuinRepo;
         public Domeincontroller(IFileProcessor fileProcessor, ITuinCentrumRepository tuinCentrumRepository)
         {
             this.fileProcessor = fileProcessor;
-            this.tuinCentrumRepository = tuinCentrumRepository;
+            this.tuinRepo = tuinCentrumRepository;
+        }
+        public void UploadData(string path)
+        {
+            (List<Klant>, List<Product>, List<Offerte>) data = fileProcessor.LeesData(path);
+
+            if (true)
+            {
+
+            }
+            tuinRepo.Schrijfklanten(data.Item1);
+            tuinRepo.SchrijfProducten(data.Item2);
+            tuinRepo.schrijfOffertes(data.Item3, fileProcessor.LeesOfferte_Producten(path + "\\offerte_producten.txt"));
+
         }
 
-        public void UploadKlant(string filename)
+        public void UploadOffertes(string filename)
         {
-            List<Klant> klanten = fileProcessor.Leesklanten(filename);
-            foreach (Klant k in klanten)
-            {
-                if (!tuinCentrumRepository.HeeftKlant(k))
-                {
-                    tuinCentrumRepository.Schrijfklant(k);
-                }
-            }
-        }
-        public void UploadOfferte(string filename)
-        {
-            List<Offerte> offertes = fileProcessor.LeesOffertes(filename);
+            List<Offerte> offertes = fileProcessor.LeesData(filename).Item3;
+
             foreach (Offerte offerte in offertes)
             {
-                if (!tuinCentrumRepository.HeeftOfferte(offerte))
+                if (!tuinRepo.HeeftOfferte(offerte))
                 {
-                    tuinCentrumRepository.schrijfOfferte(offerte);
+                    //tuinCentrumRepository.schrijfOfferte(offerte);
                 }
             }
         }
-        public void UploadOfferte_product(string filename)
+        public void UploadOfferte_producten(string filename)
         {
-            List<Offerte_Product> Ops = fileProcessor.LeesOfferte_Producten(filename);
-            foreach (Offerte_Product oP in Ops)
-            {
-                if (!tuinCentrumRepository.HeeftOfferte_Product(oP))
-                {
-                    tuinCentrumRepository.SchrijfOfferte_Product(oP);
-                }
-            }
+            List<string[]> offertsProducten = fileProcessor.LeesOfferte_Producten(filename);
+
+            tuinRepo.SchrijfOfferte_Producten(offertsProducten);
+
         }
-        public void UploadProduct(string filename)
-        {
-            List<Product> producten = fileProcessor.LeesProducten(filename);
-            foreach (Product product in producten)
-            {
-                if (!tuinCentrumRepository.HeeftProduct(product))
-                {
-                    tuinCentrumRepository.SchrijfProduct(product);
-                }
-            }
-        }
+
 
 
         public List<Klant> GeefKlanten()
         {
             try
             {
-                return tuinCentrumRepository.LeesKlanten(); ;
+                return tuinRepo.LeesKlanten().OrderBy(klant => klant.Naam).ToList();
             }
             catch (Exception ex)
             {
@@ -82,7 +72,7 @@ namespace Domein.Managers
         {
             try
             {
-                return tuinCentrumRepository.LeesProducten();
+                return tuinRepo.LeesProducten();
             }
             catch (Exception ex)
             {
@@ -94,7 +84,7 @@ namespace Domein.Managers
         {
             try
             {
-                return tuinCentrumRepository.LeesOfferteMetProducten();
+                return tuinRepo.LeesOffertes();
             }
             catch (Exception ex)
             {
@@ -103,13 +93,13 @@ namespace Domein.Managers
             }
         }
 
-        public List<Offerte> GeeftZoekOfferteOpStatistieken(string klantNr, string datum, string OffertNr)
+        public List<Offerte> GeeftZoekOfferteOpStatistieken(string klantNr, string datum, string OffertNr, string klantNaam)
         {
             try
             {
-                return tuinCentrumRepository.LeesZoekOfferteMetProductenOpStatistieken(klantNr, datum, OffertNr);
+                return tuinRepo.LeesZoekOfferteMetProductenOpStatistieken(klantNr, datum, OffertNr, klantNaam);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
 
                 throw new DomeinException("GeeftZoekOfferteOpStatistieken", ex);
@@ -120,7 +110,7 @@ namespace Domein.Managers
         {
             try
             {
-                return tuinCentrumRepository.LeesZoekKlantenOpStatistieken(klantNr, naam);
+                return tuinRepo.LeesZoekKlantenOpStatistieken(klantNr, naam);
             }
             catch (Exception ex)
             {
@@ -133,11 +123,11 @@ namespace Domein.Managers
         {
             try
             {
-                List<Product> producten = tuinCentrumRepository.LeesProducten();
-              
+                List<Product> producten = tuinRepo.LeesProducten();
+
 
                 List<string> result = producten.Select(item => $"{item.Naam}, {item.Beschrijving}, {item.Id}, €{item.prijs}").OrderBy(item => item).ToList();
-                
+
                 return result;
             }
             catch (Exception ex)
@@ -151,9 +141,9 @@ namespace Domein.Managers
         {
             try
             {
-                List<Klant> klanten = tuinCentrumRepository.LeesKlanten();
+                List<Klant> klanten = tuinRepo.LeesKlanten();
 
-                
+
                 List<string> result = klanten.Select(klant => $"{klant.Naam} | {klant.id}").OrderBy(naam => naam).ToList();
 
                 return result;
@@ -165,37 +155,38 @@ namespace Domein.Managers
             }
         }
 
-        public void UploadAangemaaktOfferte(Offerte offerte)
+
+        public void UploadAangemaaktOfferte(Offerte offerte, List<string[]> productOfferteData)
         {
-            if (!tuinCentrumRepository.HeeftOfferte(offerte))
+            if (!tuinRepo.HeeftOfferte(offerte))
             {
-                tuinCentrumRepository.schrijfOfferte(offerte);
+                List<Offerte> offertes = new List<Offerte> { offerte };
+                tuinRepo.schrijfOffertes(offertes, productOfferteData);
             }
         }
 
-        public void UploadAangemaakteOfferte_Product(Offerte_Product offerteProduct)
+        public void UploadAangemaakteOfferte_Producten(List<string[]> data)
         {
-            if (!tuinCentrumRepository.HeeftOfferte_Product(offerteProduct))
-            {
-                tuinCentrumRepository.SchrijfOfferte_Product(offerteProduct);
-            }
+
+            tuinRepo.SchrijfOfferte_Producten(data);
+
         }
 
         public bool HeeftOfferteAl(Offerte offerte)
         {
-            return tuinCentrumRepository.HeeftOfferte(offerte);
+            return tuinRepo.HeeftOfferte(offerte);
         }
 
         public bool HeeftKlantOpId(int klantNr)
         {
-            return tuinCentrumRepository.HeeftKlantOpId(klantNr);
+            return tuinRepo.HeeftKlantOpId(klantNr);
         }
 
         public int GeefMeestRecenteOfferteId()
         {
             try
             {
-                return tuinCentrumRepository.LeesAantalOffertes()+1;
+                return tuinRepo.LeesAantalOffertes() + 1;
             }
             catch (Exception ex)
             {
@@ -203,5 +194,39 @@ namespace Domein.Managers
                 throw new DomeinException("GeefAantalOffertes", ex);
             }
         }
+
+        public List<Product> GeefZoekProductOp(string naam)
+        {
+            try
+            {
+                return tuinRepo.leesZoekProductenOp(naam);
+            }
+            catch (Exception ex)
+            {
+
+                throw new DomeinException("GeefZoekProductOp", ex);
+            }
+        }
+
+        public List<Klant> GeefZoekKlantOp(string naam)
+        {
+            try
+            {
+                return tuinRepo.leesZoekKlantOp(naam);
+            }
+            catch (Exception ex)
+            {
+
+                throw new DomeinException("GeefZoekKlantOp", ex);
+            }
+        }
+
+        public void wijzigOfferte(Offerte offerte, int originaleOfferteId)
+        {
+            tuinRepo.UpdateOfferte(offerte, originaleOfferteId);
+
+        }
+
+
     }
 }

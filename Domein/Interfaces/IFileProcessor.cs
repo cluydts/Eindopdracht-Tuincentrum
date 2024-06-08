@@ -9,10 +9,12 @@ namespace Domein.Interfaces
 {
     public interface IFileProcessor
     {
-        List<Klant> Leesklanten(string filename);
-        List<Product> LeesProducten(string filename);
-        List<Offerte> LeesOffertes(string filename);
-        List<Offerte_Product> LeesOfferte_Producten(string filename);
+        Dictionary<int,Klant> Leesklanten(string filename);
+        Dictionary<int, Product> LeesProducten(string filename);
+        Dictionary<int, Offerte> LeesOffertes(string filename, Dictionary<int, Klant> klanten);
+        List<string[]> LeesOfferte_Producten(string filename);
+
+        (List<Klant>, List<Product>, List<Offerte>) LeesData(string filename);
 
     }
 }

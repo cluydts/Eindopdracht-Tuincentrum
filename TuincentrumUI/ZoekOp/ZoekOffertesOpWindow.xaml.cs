@@ -23,8 +23,11 @@ namespace TuincentrumUI
     /// <summary>
     /// Interaction logic for ZoekOffertesOpWindow.xaml
     /// </summary>
+    /// 
+   
     public partial class ZoekOffertesOpWindow : Window
     {
+        List<Offerte> offertes = new List<Offerte>();
         string connectionstring = @"Data Source=Vaulter\SQLEXPRESS;
                                       Initial Catalog=TuinCentrum;
                                       Integrated Security=True;
@@ -55,8 +58,11 @@ namespace TuincentrumUI
             string klantNr = KlantNrTextBox.Text;
             string datum = DatumDatePicker.SelectedDate?.ToString("yyyy-MM-dd");
             string offerteid = OfferteTextBox.Text;
+            string klantNaam = klantNaamTextBox.Text;
 
-            StatistiekenOffertesDataGrid.ItemsSource = dc.GeeftZoekOfferteOpStatistieken(klantNr, datum, offerteid);
+            offertes = dc.GeeftZoekOfferteOpStatistieken(klantNr, datum, offerteid, klantNaam);
+
+            StatistiekenOffertesDataGrid.ItemsSource = offertes;
 
         }
         private void OfferteTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -107,6 +113,50 @@ namespace TuincentrumUI
 
         }
 
-        
+        private void StatistiekenOffertesDataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            var offerte = StatistiekenOffertesDataGrid.SelectedCells;
+        }
+
+        private void StatistiekenOffertesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Offerte offere = (Offerte)StatistiekenOffertesDataGrid.SelectedItem;
+
+            PasOfferteAanWindow window = new PasOfferteAanWindow(offere);
+            window.Show();
+            this.Hide();
+        }
+
+        private void klantNaamTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string klantNaam = klantNaamTextBox.Text;
+            bool isNummeriek;
+
+            int caretPosition = klantNaamTextBox.SelectionStart;
+            if (caretPosition == 0)
+            {
+                isNummeriek = false;
+            }
+            else
+            {
+                string input = klantNaam[klantNaam.Length - 1].ToString();
+                isNummeriek = int.TryParse(input, out int getal);
+            }
+
+            if (isNummeriek)
+            {
+                string letteriekeTekst = new string(klantNaam.Where(char.IsLetter).ToArray());
+
+                if (letteriekeTekst != klantNaam)
+                {
+                    klantNaamTextBox.Text = letteriekeTekst;
+                    klantNaamTextBox.SelectionStart = Math.Max(0, caretPosition - (klantNaam.Length - letteriekeTekst.Length));
+                }
+            }
+            else
+            {
+                VoerMethodeUit();
+            }
+        }
     }
 }

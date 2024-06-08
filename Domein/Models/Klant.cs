@@ -22,6 +22,7 @@ namespace Domein.Models
             Naam = naam;
             this.adres = adress;
         }
-      
+
+    
     }
 }

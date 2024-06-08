@@ -3,6 +3,7 @@ using Domein.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,9 @@ namespace Persistentie_File
 {
     public class FileProcessor : IFileProcessor
     {
-        public List<Klant> Leesklanten(string filename)
+        public Dictionary<int, Klant> Leesklanten(string filename)
         {
-            List<Klant> klanten = new();
+            Dictionary<int, Klant> klanten = new();
             try
             {
                 using (StreamReader reader = new StreamReader(filename))
@@ -22,11 +23,11 @@ namespace Persistentie_File
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                      
+
                         string[] parts = line.Split('|');
                         if (parts.Length == 3)
                         {
-                            klanten.Add(new Klant(int.Parse(parts[0]), parts[1], parts[2]));
+                            klanten.Add(int.Parse(parts[0]), new Klant(int.Parse(parts[0]), parts[1], parts[2]));
                         }
                         else
                         {
@@ -43,9 +44,9 @@ namespace Persistentie_File
             return klanten;
         }
 
-        public List<Product> LeesProducten(string filename)
+        public Dictionary<int, Product> LeesProducten(string filename)
         {
-            List<Product> producten = new List<Product>();
+            Dictionary<int, Product> producten = new();
 
             try
             {
@@ -58,8 +59,8 @@ namespace Persistentie_File
                         string[] parts = line.Split('|');
                         if (parts.Length == 5)
                         {
-                          
-                            producten.Add(new Product(int.Parse(parts[0]), parts[1], parts[2], double.Parse(parts[3]), parts[4]));
+
+                            producten.Add(int.Parse(parts[0]), new Product(int.Parse(parts[0]), parts[1], parts[2], double.Parse(parts[3]), parts[4]));
                         }
                         else
                         {
@@ -76,9 +77,12 @@ namespace Persistentie_File
             return producten;
         }
 
-        public List<Offerte> LeesOffertes(string filename)
+        public Dictionary<int, Offerte> LeesOffertes(string filename, Dictionary<int, Klant> klanten)
         {
-            List<Offerte> offertes = new();
+           
+
+            Dictionary<int, Offerte> offertes = new();
+
             try
             {
 
@@ -87,16 +91,17 @@ namespace Persistentie_File
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                       
+
                         string[] parts = line.Split('|');
-                        if (parts.Length == 6)
+                        foreach (KeyValuePair<int, Klant> kvp in klanten)
                         {
-                            offertes.Add(new Offerte(int.Parse(parts[0]), DateTime.Parse(parts[1]), int.Parse(parts[2]), bool.Parse(parts[3]), bool.Parse(parts[4]), int.Parse(parts[5])));
+                            if (kvp.Key == int.Parse(parts[2]))
+                            {
+                                offertes.Add(int.Parse(parts[0]), new Offerte(int.Parse(parts[0]), DateTime.Parse(parts[1]), kvp.Value, bool.Parse(parts[3]), bool.Parse(parts[4]), int.Parse(parts[5])));
+                            }
+
                         }
-                        else
-                        {
-                            Console.WriteLine($"Ongeldige invoer in de regel: {line}");
-                        }
+
                     }
 
                 }
@@ -108,9 +113,10 @@ namespace Persistentie_File
             return offertes;
         }
 
-        public List<Offerte_Product> LeesOfferte_Producten(string filename)
+        public List<string[]> LeesOfferte_Producten(string filename)
         {
-            List<Offerte_Product> data = new();
+            List<string[]> data = new();
+            int index = 0;
             try
             {
 
@@ -119,11 +125,12 @@ namespace Persistentie_File
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                       
+
                         string[] parts = line.Split('|');
                         if (parts.Length == 3)
                         {
-                            data.Add(new Offerte_Product(int.Parse(parts[0]), int.Parse(parts[1]),  int.Parse(parts[2])));
+                            data.Add(parts);
+                            index++;
                         }
                         else
                         {
@@ -136,10 +143,31 @@ namespace Persistentie_File
             catch (Exception ex)
             {
                 Console.WriteLine($"Fout bij het lezen van het bestand: {ex.Message}");
+                Console.WriteLine("index: " + index);
             }
             return data;
         }
 
+        public (List<Klant>, List<Product>, List<Offerte>) LeesData(string path)
+        {
+            Dictionary<int, Product> producten = LeesProducten(path + "\\producten.txt");
 
+            Dictionary<int, Klant> klanten = Leesklanten(path + "\\klanten.txt");
+
+            Dictionary<int, Offerte> offertes = LeesOffertes(path + "\\offertes.txt", klanten);
+
+            List<string[]> productOffertes = LeesOfferte_Producten(path + "\\offerte_producten.txt");
+
+            foreach (string[] OP in productOffertes)
+            {
+                int offertIdKey = int.Parse(OP[0]);
+                Product product = producten[int.Parse(OP[1])];
+                int aantal = int.Parse(OP[2]);
+
+                offertes[offertIdKey].VoegProductToe(product, aantal);
+            }
+
+            return (klanten.Values.ToList(), producten.Values.ToList(), offertes.Values.ToList());
+        }
     }
 }

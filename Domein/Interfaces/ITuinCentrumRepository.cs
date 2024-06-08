@@ -12,19 +12,33 @@ namespace Domein.Interfaces
         bool HeeftKlant(Klant klant);
         bool HeeftProduct(Product product);
         bool HeeftOfferte(Offerte offerte);
-        bool HeeftOfferte_Product(Offerte_Product offerte_product);
-        void Schrijfklant(Klant klant);
-        void SchrijfProduct(Product product);
-        void schrijfOfferte(Offerte offerte);
-        void SchrijfOfferte_Product(Offerte_Product offerte_product);
+        bool HeeftOfferte_Product(string offerteNr, string productId, string aantalProducten);
+
+
+        void Schrijfklanten(List<Klant> klanten);
+        void SchrijfProducten(List<Product> producten);
+        void schrijfOffertes(List<Offerte> offerte, List<string[]> OfferteProductenData);
+        void SchrijfOfferte_Producten(List<string[]> OfferteProducten);
+
+
         List<Klant> LeesKlanten();
         List<Product> LeesProducten();
         List<Offerte> LeesOffertes();
-        List<Offerte> LeesOfferteMetProducten();
-        List<Offerte> LeesZoekOfferteOpStatistieken(string klantNr, string datum, string OffertNr);
+
+
+
+        public List<Offerte> LeesZoekOfferteOpStatistieken(string klantNr, string datum, string OffertNr, string KlantNaam);
         List<KlantStatistieken> LeesZoekKlantenOpStatistieken(string klantNr, string naam);
-        List<Offerte> LeesZoekOfferteMetProductenOpStatistieken(string klantNr, string datum, string OffertNr);
+        public List<Offerte> LeesZoekOfferteMetProductenOpStatistieken(string klantNr, string datum, string OffertNr, string KlantNaam);
+
+
         bool HeeftKlantOpId(int klantId);
         public int LeesAantalOffertes();
+
+        public List<Product> leesZoekProductenOp(string naam);
+        public List<Klant> leesZoekKlantOp(string naam);
+
+        public void UpdateOfferte(Offerte offerte, int orginielOfferteId);
+
     }
 }

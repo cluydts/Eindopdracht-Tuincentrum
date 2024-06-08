@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Domein.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,11 +21,13 @@ namespace TuincentrumUI
     /// </summary>
     public partial class MaakOffertesOpSelecteerAantalProductWindow : Window
     {
+        ObservableCollection<Product> products;
         private MaakOffertesOpWindow originalWindow;
-        public MaakOffertesOpSelecteerAantalProductWindow(string product, MaakOffertesOpWindow window)
+        public MaakOffertesOpSelecteerAantalProductWindow(Product product, MaakOffertesOpWindow window)
         {
             InitializeComponent();
-            GeselecteerdeProductTextBox.Text = product;
+            products = [product];
+            GeselecteerdeProductListBox.ItemsSource = products;
             originalWindow = window;
             List<int> aantal = new List<int>();
             int getal = 1;
@@ -37,13 +41,10 @@ namespace TuincentrumUI
 
         private void VoegProductMetAantalToeButton_Click(object sender, RoutedEventArgs e)
         {
+            Product product = products[0];
+            int aantal = (int)AantalGeselecteerdeProductComboBox.SelectedItem;
 
-            int selectedAmount = (int)AantalGeselecteerdeProductComboBox.SelectedItem;
-
-            string geselecteerdeProductMetAantal = "";
-
-            geselecteerdeProductMetAantal = GeselecteerdeProductTextBox.Text + " | " + selectedAmount.ToString();
-            originalWindow.UpdateSelectedProductsListBox(geselecteerdeProductMetAantal);
+            originalWindow.UpdateSelectedProductsListBox(product,aantal);
 
             originalWindow.UpdatePrijs();
 

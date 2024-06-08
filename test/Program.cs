@@ -23,6 +23,8 @@ namespace test
             //string productenFile = @"C:\Users\jeroe\Documents\Documents\ProgrammerenGevorderd\programmeren gevorderd 2\Eindopdracht\tuin\producten.txt";
             //string offerte_productenFile = @"C:\Users\jeroe\Documents\Documents\ProgrammerenGevorderd\programmeren gevorderd 2\Eindopdracht\tuin\offerte_producten.txt";
 
+            string pad = @"C:\Users\jeroe\Documents\Documents\ProgrammerenGevorderd\programmeren gevorderd 2\Eindopdracht\tuin";
+
             IFileProcessor processor = new FileProcessor();
             ITuinCentrumRepository tuinRepo = new TuinCentrumRepository(connectionstring);
 
@@ -34,18 +36,20 @@ namespace test
             //dc.UploadOfferte_product(offerte_productenFile);
             //List<Offerte> offertes = dc.GeefOffertes();
 
-            Offerte offerte1 = new Offerte(100, new DateTime(22 / 05 / 2024), 5, true, false, 5);
+            //Offerte offerte1 = new Offerte(100, new DateTime(22 / 05 / 2024), 5, true, false, 5);
 
-            Product product1 = new Product(45, "Product 1", "wetenschappelijk prodcuct 1", 10.0, "beschrijving product 1");
-            Product product2 = new Product(50, "Product 2", "wetenschappelijk prodcuct 2", 15.5, "beschrijving product 2");
-            Product product3 = new Product(55, "Product 3", "wetenschappelijk prodcuct 3", 14.0, "beschrijving product 3");
+            //Product product1 = new Product(45, "Product 1", "wetenschappelijk prodcuct 1", 10.0, "beschrijving product 1");
+            //Product product2 = new Product(50, "Product 2", "wetenschappelijk prodcuct 2", 15.5, "beschrijving product 2");
+            //Product product3 = new Product(55, "Product 3", "wetenschappelijk prodcuct 3", 14.0, "beschrijving product 3");
 
-            offerte1.VoegProductToe(product1, 2);
-            offerte1.VoegProductToe(product2, 2);
-            offerte1.VoegProductToe(product3, 1);
+            //offerte1.VoegProductToe(product1, 2);
+            //offerte1.VoegProductToe(product2, 2);
+            //offerte1.VoegProductToe(product3, 1);
 
-            double prijs = offerte1.BerekenTotalePrijs();
-            Console.WriteLine(prijs);
+            //double prijs = offerte1.BerekenTotalePrijs();
+            //Console.WriteLine(prijs);
+
+            dc.UploadData(pad);
         }
     }
 }
