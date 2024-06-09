@@ -36,9 +36,9 @@ namespace TuincentrumUI
         IFileProcessor processor;
         ITuinCentrumRepository tuinRepo;
         Domeincontroller dc;
-        ObservableCollection<string> alleProducten;
+      
         ObservableCollection<KeyValuePair<Product, int>> origineleProducten;
-        List<string> Klanten;
+      
         int origineleOfferteId;
         Offerte offert;
         public PasOfferteAanWindow(Offerte offerte)
@@ -48,7 +48,7 @@ namespace TuincentrumUI
             processor = new FileProcessor();
             tuinRepo = new TuinCentrumRepository(connectionstring);
             dc = new Domeincontroller(processor, tuinRepo);
-            alleProducten = new ObservableCollection<string>(dc.GeefProductNamen());
+          
             AlleProductenListBox.ItemsSource = dc.GeefProducten();
 
             offert = offerte;
@@ -93,9 +93,6 @@ namespace TuincentrumUI
         private void VerwijderAlleProductenButton_Click(object sender, RoutedEventArgs e)
         {
             origineleProducten.Clear();
-
-
-
             UpdatePrijs();
         }
 

@@ -37,9 +37,9 @@ namespace TuincentrumUI
         IFileProcessor processor;
         ITuinCentrumRepository tuinRepo;
         Domeincontroller dc;
-        ObservableCollection<string> alleProducten;
+       
         ObservableCollection<KeyValuePair<Product, int>> GeselecteerdeProducten;
-        List<string> Klanten;
+       
 
         public MaakOffertesOpWindow()
         {
@@ -47,12 +47,10 @@ namespace TuincentrumUI
             processor = new FileProcessor();
             tuinRepo = new TuinCentrumRepository(connectionstring);
             dc = new Domeincontroller(processor, tuinRepo);
-            alleProducten = new ObservableCollection<string>(dc.GeefProductNamen());
+           
             AlleProductenListBox.ItemsSource = dc.GeefProducten();
             GeselecteerdeProducten = new ObservableCollection<KeyValuePair<Product, int>>();
 
-
-            //Klanten = new List<string>(dc.geefKlantenNamen());
             KlantNummerComboBox.ItemsSource = dc.GeefKlanten();
             DatumDatePicker.SelectedDate = DateTime.Now;
             OfferteNummerTextBox.Text = dc.GeefMeestRecenteOfferteId().ToString();
